@@ -31,7 +31,9 @@ const userSchema: Schema = new Schema<AuthType>({
 }, { collection: "users", timestamps: true })
 
 
-const UserModel = mongoose.models.UserModel as mongoose.Model<AuthType> || mongoose.model<AuthType>("user", userSchema);
+const UserModel =
+   mongoose.models.UserModel as mongoose.Model<AuthType> ||
+   mongoose.model<AuthType>("UserModel", userSchema);
 
 export default UserModel
 

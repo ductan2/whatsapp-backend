@@ -18,8 +18,10 @@ export const createConversationController = async (req: Request, res: Response, 
    }
 }
 export const getConversationController = async (req: Request, res: Response, next: NextFunction) => {
+   const { _id: user_id } = req.user;
    try {
-      
+      const result = await conversationService.getConversation(user_id)
+      return res.json(result)
    } catch (error) {
       next(error)
    }

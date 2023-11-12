@@ -1,37 +1,46 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import IConversation from "~/types/conversation.type";
-import UserModel from "./user.model";
-const ObjectId = mongoose.Schema.Types.ObjectId;
 
-export const conversationSchema = new mongoose.Schema({
-   name: {
-      type: String,
-      required: true,
-      trim: true,
-   },
-   isGroup: {
-      type: Boolean,
-      default: false,
-   },
-   users: [
-      {
+const { ObjectId } = mongoose.Schema.Types;
+const conversationSchema: Schema = new Schema<IConversation>(
+   {
+      name: {
+         type: String,
+         required: [true, "Conversations name is required."],
+         trim: true,
+      },
+      picture: {
+         type: String,
+         default: "https://www.pngitem.com/pimgs/m/421-4212341_default-avatar-svg-hd-png-download.png",
+      },
+      isGroup: {
+         type: Boolean,
+         required: true,
+         default: false,
+      },
+      users: [
+         {
+            type: ObjectId,
+            ref: 'UserModel',
+         },
+      ],
+      latestMessage: {
          type: ObjectId,
-         ref: UserModel
-      }
-   ],
-   latestMessage: {
-      type: ObjectId,
-      ref: "MessageModel"
+         ref: 'MessageModel',
+      },
+      admin: {
+         type: ObjectId,
+         ref: 'UserModel',
+      },
    },
-   admin: {
-      type: ObjectId,
-      ref: UserModel
+   {
+      collection: "conversations",
+      timestamps: true,
    }
-}, {
-   collection: "conversations", timestamps: true
-})
+);
+
 const ConversationModel =
    mongoose.models.ConversationModel as mongoose.Model<IConversation> ||
-   mongoose.model<IConversation>("conversation", conversationSchema);
+   mongoose.model<IConversation>("ConversationModel", conversationSchema);
 
-export default ConversationModel
+export default ConversationModel;

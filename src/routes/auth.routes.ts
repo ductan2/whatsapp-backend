@@ -14,6 +14,8 @@ router.get('/logout', logoutController)
 
 router.post('/refreshToken', refreshTokenController)
 
-router.get('/test', authMiddlewares,getInfoController)
+router.get('/info', authMiddlewares, getInfoController)
+
+
 
 export default router;

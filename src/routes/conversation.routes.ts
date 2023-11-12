@@ -7,4 +7,5 @@ const router = express.Router()
 router.post("/", authMiddlewares, createConversationController)
 
 router.get('/',authMiddlewares,getConversationController)
+
 export default router

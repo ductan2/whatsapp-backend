@@ -21,6 +21,7 @@ class ConversationService {
       const dataRoom: IConversation = {
          name: receiver_user.name,
          isGroup: false,
+         picture: receiver_user.avatar,
          users: [sender_obj_id, receiver_obj_id],
          latestMessage: null,
          admin: sender_obj_id
@@ -42,7 +43,7 @@ class ConversationService {
             path: "conversation"
          })
       }
-      
+
       conv = await ConversationModel.findOne({
          isGroup: false,
          $and: [
@@ -57,6 +58,16 @@ class ConversationService {
          select: "name email avatar status"
       })
       return conv
+   }
+   async getConversation(user_id: string) {
+
+      const conversations = await ConversationModel.find({
+         users: { $elemMatch: { $eq: user_id } }
+      })
+         .populate("users", "-password")
+         .populate("latestMessage")
+         .sort({ updatedAt: -1 })
+      return conversations
    }
 }
 export const conversationService = new ConversationService();

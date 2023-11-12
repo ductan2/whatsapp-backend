@@ -8,9 +8,9 @@ export const authMiddlewares = async (req: Request, res: Response, next: NextFun
    let token
    if (req?.headers?.authorization && req.headers.authorization.startsWith("Bearer")) {
       token = req.headers.authorization.split(" ")[1]
+      console.log("🚀 ~ file: checkToken.middlewares.ts:11 ~ authMiddlewares ~ token:", token)
       try {
          const decoded = await verify(token, process.env.ACCESS_TOKEN_SECRET as string)
-         console.log("🚀 ~ file: checkToken.middlewares.ts:13 ~ authMiddlewares ~ decoded:", decoded)
          const expNow = Date.now() / 1000;
          const { exp } = decoded as JwtType;
          if (Number(exp) < expNow) {
@@ -27,5 +27,12 @@ export const authMiddlewares = async (req: Request, res: Response, next: NextFun
       } catch (error) {
          next(error)
       }
+   }
+   else {
+      throw new ErrorWithStatus({
+         message: "Token is invalid",
+         status: 401,
+         path: "authMiddlewares"
+      })
    }
 }

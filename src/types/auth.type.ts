@@ -10,6 +10,8 @@ export interface AuthType {
 }
 export type LoginType = Pick<AuthType, 'email' | 'password'>;
 
+export type UpdateType = Pick<AuthType, 'name' | 'avatar' | 'password' >;
+
 export type JwtType = {
    user_id: string,
    iat: number,
