@@ -9,8 +9,12 @@ import fileUpload from 'express-fileupload';
 import compression from 'compression';
 import cors from 'cors';
 import createHttpError from "http-errors";
+import { Server } from "socket.io";
+
+
 import logger from './config/logger';
 import router from './routes/index.routes';
+import SockerServer from './SockerServer';
 dotenv.config();
 const app = express();
 
@@ -81,6 +85,19 @@ app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
          ]
       })
    }
+})
+// ==> socket io
+const io = new Server(server, {
+   pingTimeout: 60000,
+   cors: {
+      origin: process.env.CLIENT_ENDPOINT,
+      // methods: ["GET", "POST"]
+   }
+});
+
+io.on("connection", (socket) => {
+   logger.info("Socket connected: " + socket.id);
+   SockerServer(socket, io);
 })
 
 // ==> handle unexpected error resolution

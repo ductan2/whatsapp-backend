@@ -30,6 +30,7 @@ class MessageService {
          sender: sender_user,
          conversation: conv_id,
          message,
+         files
       })
       const getNewMessage = await this.getMessageById(newMessage._id)
       await this.updateLatestMessage(conv_id, getNewMessage)
@@ -41,7 +42,6 @@ class MessageService {
    async getMessageByConversationId(conv_id: string) {
       const messageList = await MessageModel.find({ conversation: conv_id })
          .populate("sender", "name avatar email status").populate("conversation")
-      console.log("🚀 ~ file: message.service.ts:44 ~ MessageService ~ getMessageByConversationId ~ messageList:", messageList)
       if (!messageList) {
          throw new ErrorWithStatus({
             message: "Message not found!",
